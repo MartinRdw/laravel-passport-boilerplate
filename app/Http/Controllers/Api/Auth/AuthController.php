@@ -56,7 +56,10 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::create($request->all());
+        $data = $request->all();
+        $data['password'] = bcrypt($data['password']);
+
+        $user = User::create($data);
 
         return response()->json([
             'code' => '200',
@@ -115,6 +118,8 @@ class AuthController extends Controller
     public function user()
     {
         $user = Auth::user();
+
+        $user['type'] = 'user';
 
         return response()->json([
             'code' => '200',
